@@ -60,7 +60,7 @@ if(!$fileName){?>
                         </div>
                     </div>
                 </div>
-                <a href="/" target="_blank" class="jsCopy copyright">Dreamod <i class="fa fa-github"></i></a>
+                <a href="https://github.com/Dreamod/emulate1cForBitrix" target="_blank" class="jsCopy copyright">Dreamod <i class="fa fa-github"></i></a>
             </div>
         </body>
     </html>
