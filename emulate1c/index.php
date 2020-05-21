@@ -9,6 +9,7 @@ if(!$fileName){?>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap">
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
             <link rel="stylesheet" href="<?=$arConfig['assetsDir']?>style.css">
             <script src="https://use.fontawesome.com/d3ff013f83.js"></script>
@@ -18,10 +19,21 @@ if(!$fileName){?>
         <body class="jsBody">
             <div class="container jsContent pt50 pt-xs-30">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 col-sm-6">
                         <h1>Эмулятор 1Сника</h1>
                     </div>
-                    <div class="col-12 col-lg-4">
+                    <div class="col-12 col-sm-6">
+                        <div class="timerWrap jsTimerWrap">
+                            <div class="timer jsTimer">
+                                <div class="timerItem jsHour">00</div>
+                                <div class="timerSpacer">:</div>
+                                <div class="timerItem jsMin">00</div>
+                                <div class="timerSpacer">:</div>
+                                <div class="timerItem jsSec">00</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-5">
                         <div data-action="<?=$arConfig['relPath']?>" class="btn-group-vertical btn-group-sm mt40 mt-xs-20 jsImportButtonsWrap w100">
                             <?if($arConfig['arFiles']['xml']){?>
                                 <span class="btn btn-xs btn-outline-dark disabled tl">.xml файлы</span>
@@ -37,7 +49,7 @@ if(!$fileName){?>
 	                        <?}?>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-8">
+                    <div class="col-12 col-lg-7">
                         <div class="alert jsAlert mt40 mt-xs-20 alert-info" role="alert" style="display:none;">
                             <h4 class="jsAlertTitle alert-heading"></h4><hr>
                             <ol class="log"></ol>

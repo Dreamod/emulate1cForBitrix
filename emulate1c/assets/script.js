@@ -6,7 +6,9 @@ $(function(){
         body    =   $('.jsBody'),
         content =   $('.jsContent'),
         footer  =   $('.jsFooter'),
-        copy    =   $('.jsCopy');
+        copy    =   $('.jsCopy'),
+        timerId,
+        titleTimerId;
 
     setContentMinHeight();
     setCopyrightWidth();
@@ -25,6 +27,8 @@ $(function(){
             fileType=   button.attr('data-type'),
             path    =   button.closest('.jsImportButtonsWrap').attr('data-action'),
             token   =   '';
+        stopTimer();
+        startTimer();
         e.preventDefault();
         clearImportLog();
         restartAllButtons();
@@ -35,7 +39,6 @@ $(function(){
         addImportLogRow('Получаю токен');
         alert.show();
         token   =   getToken(button);
-        console.log(token);
         if(token!==""){
             addImportLogRow('Токен получен');
             $.ajax({
@@ -48,6 +51,7 @@ $(function(){
                     if(data.status==='ok'){
                         runImport(data.import,token);
                     }else{
+                        stopTimer('- Error');
                         addImportLogRow('Ошибка при копировании файла '+fileName);
                         addImportLogRow('error Импорт прерван из-за ошибки.');
                         triggerImportLogStatus('danger');
@@ -57,6 +61,7 @@ $(function(){
                 }
             });
         }else{
+            stopTimer('- Error');
             addImportLogRow('Токен не получен');
             addImportLogRow('error Импорт прерван из-за ошибки.');
             triggerImportLogStatus('danger');
@@ -79,6 +84,7 @@ $(function(){
             async:      false,
             success:    function(data){
                 if(data.indexOf('Авторизация')>1){
+                    stopTimer('- Error');
                     addImportLogRow('Проблема с авторизацией!');
                     addImportLogRow('Необходимо авторизоваться под пользователем имеющим право на обмен с 1С.');
                     addImportLogRow('error Импорт прерван из-за ошибки.');
@@ -106,6 +112,7 @@ $(function(){
             dataType:   'html',
             success:    function(data){
                 if(data.indexOf('Авторизация')>1){
+                    stopTimer('- Error');
                     addImportLogRow('Проблема с авторизацией!');
                     addImportLogRow('Необходимо авторизоваться под пользователем имеющим право на обмен с 1С.');
                     addImportLogRow('error Импорт прерван из-за ошибки.');
@@ -117,6 +124,7 @@ $(function(){
                         runImport(fileName,token);
                     },500);
                 }else{
+                    stopTimer('+ Finish');
                     addImportLogRow(data);
                     triggerButtonStatus(button,'finish');
                 }
@@ -218,7 +226,74 @@ $(function(){
     }
 
     /**
-     * расширяе возможности jQuery
+     * обновляет тайтл страницы
+     * @param text
+     */
+    function updateTitle(text){
+        document.title  =   text;
+    }
+
+    /**
+     * останавливает таймер
+     * @param text
+     */
+    function stopTimer(text=''){
+        let timerWrap   =   $('.jsTimerWrap'),
+            timer       =   timerWrap.find('.jsTimer'),
+            tmpTimer    =   timer.clone();
+        timer.remove();
+        timerWrap.append(tmpTimer);
+        clearInterval(timerId);
+        clearInterval(titleTimerId);
+        if(text){
+            updateTitle(text);
+        }
+    }
+
+    /**
+     * запускает таймер
+     */
+    function startTimer(){
+        let s   =   '01',
+            m   =   '00',
+            h   =   '00',
+            d   =   1,
+            hour=   document.querySelector('.jsHour'),
+            min =   document.querySelector('.jsMin'),
+            sec =   document.querySelector('.jsSec');
+        sec.innerText   =   s;
+        min.innerText   =   m;
+        hour.innerText  =   h;
+        timerId =   setInterval(function(){
+            s   =   +s+1;
+            if(s<10){s='0'+s;}
+            if(s===60){
+                s='00';
+                m=+m+1;
+                if(m<10){m='0'+m;}
+                if(m===60){
+                    m='00';
+                    h=+h+1;
+                    if(h<10){h='0'+h;}
+                }
+            }
+            sec.innerText   =   s;
+            min.innerText   =   m;
+            hour.innerText  =   h;
+        },1000);
+        titleTimerId=   setInterval(function(){
+            if(d===1){
+                updateTitle('>');
+            }else{
+                updateTitle('>'+document.title);
+            }
+            d++;
+            if(d===7){d=1;}
+        },500);
+    }
+
+    /**
+     * расширяет возможности jQuery
      * дает возможность удаления классов по маске
      * @param mask
      * @returns {*}
